@@ -8,7 +8,6 @@ import {
 
 import fs from "fs";
 
-
 const inputFile = fs.readFileSync("C5/input.txt", "utf-8");
 const splitInput = inputFile.split("\r\n");
 

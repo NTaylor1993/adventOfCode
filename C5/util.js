@@ -35,52 +35,27 @@ export const getNextItem = (item, mappings) => {
 
     return {
         value: nextMapping.destinationStart + (item - nextMapping.sourceStart),
-        range: nextMapping.rangeLength,
     };
 };
 
 export const getLocationValue = (seedValue, data) => {
-    const { value: soilValue, range: soilRange } = getNextItem(seedValue, data.seedToSoilMap);
-    const { value: fertilizerValue, range: fertilizerRange } = getNextItem(
-        soilValue,
-        data.soilToFertilizerMap,
-    );
-    const { value: waterValue, range: waterRange } = getNextItem(
-        fertilizerValue,
-        data.fertilizerToWaterMap,
-    );
-    const { value: lightValue, range: lightRange } = getNextItem(waterValue, data.waterToLightMap);
-    const { value: temperatureValue, range: temperatureRange } = getNextItem(
-        lightValue,
-        data.lightToTemperatureMap,
-    );
-    const { value: humidityValue, range: humidityRange } = getNextItem(
-        temperatureValue,
-        data.temperatureToHumidityMap,
-    );
-    const { value: locationValue, range: locationRange } = getNextItem(
-        humidityValue,
-        data.humidityToLocationMap,
-    );
+    const { value: soilValue } = getNextItem(seedValue, data.seedToSoilMap);
+    const { value: fertilizerValue } = getNextItem(soilValue, data.soilToFertilizerMap);
+    const { value: waterValue } = getNextItem(fertilizerValue, data.fertilizerToWaterMap);
+    const { value: lightValue } = getNextItem(waterValue, data.waterToLightMap);
+    const { value: temperatureValue } = getNextItem(lightValue, data.lightToTemperatureMap);
+    const { value: humidityValue } = getNextItem(temperatureValue, data.temperatureToHumidityMap);
+    const { value: locationValue } = getNextItem(humidityValue, data.humidityToLocationMap);
 
     return {
         locationValue,
-        minRange: Math.min(
-            soilRange,
-            fertilizerRange,
-            waterRange,
-            lightRange,
-            temperatureRange,
-            humidityRange,
-            locationRange,
-        ),
     };
 };
 
-export const getLowestLocation = (data) => {
+export const getLowestLocation = ({ seeds, ...data }) => {
     let lowestLocation = Infinity;
 
-    data.seeds.forEach((seedValue) => {
+    seeds.forEach((seedValue) => {
         const { locationValue } = getLocationValue(seedValue, data);
 
         if (locationValue < lowestLocation) {

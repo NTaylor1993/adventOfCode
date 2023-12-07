@@ -1,8 +1,12 @@
 import fs from "fs";
 
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { calculateHandStrength, calculateHandStrengthWildcard, sortHands } from "./util.js";
 
-const inputFile = fs.readFileSync("C7/input.txt", "utf-8");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const inputFile = fs.readFileSync(`${__dirname}/input.txt`, "utf-8");
 const inputStrings = inputFile.split("\n");
 
 const p1 = (input) => {
@@ -27,5 +31,5 @@ const p2 = (input) => {
     return data.reduce((a, b, index) => a + b.bid * (index + 1), 0);
 };
 
-console.log(p1(inputStrings));
-console.log(p2(inputStrings));
+console.log(`P1: ${p1(inputStrings)}`);
+console.log(`P2: ${p2(inputStrings)}`);

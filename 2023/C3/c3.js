@@ -1,5 +1,10 @@
 import fs from "fs";
-const fileName = "C3/input.txt";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const fileName = `${__dirname}/input.txt`;
 
 function isValidIndex(i, j, area) {
     return i >= 0 && i < area.length && j >= 0 && j < area[0].length;
@@ -112,7 +117,7 @@ for (let i = 0; i < area.length; i++) {
 }
 
 const partNumberSum = partNumbers.reduce((a, b) => a + b, 0);
-console.log(`Part 1 Sum: ${partNumberSum}`);
+console.log(`P1: ${partNumberSum}`);
 
 let gearNumberSum = 0;
 const keys = Object.keys(gearNumbers);
@@ -122,4 +127,4 @@ for (let i = 0; i < keys.length; i++) {
     }
 }
 
-console.log(`Part 2 Sum: ${gearNumberSum}`);
+console.log(`P2: ${gearNumberSum}`);

@@ -1,6 +1,10 @@
 import fs from "fs";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const inputFile = fs.readFileSync("C6/input.txt", "utf-8");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const inputFile = fs.readFileSync(`${__dirname}/input.txt`, "utf-8");
 const inputStrings = inputFile.split("\n");
 
 const data = {};
@@ -58,5 +62,5 @@ const p2 = ({ time, distance }) => {
     return calculateWinCount(actualTime, actualDistance);
 };
 
-console.log(p1(data));
-console.log(p2(data));
+console.log(`P1: ${p1(data)}`);
+console.log(`P2: ${p2(data)}`);

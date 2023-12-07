@@ -1,6 +1,10 @@
 import fs from "fs";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const inputFile = fs.readFileSync("C2/input.txt", "utf-8");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const inputFile = fs.readFileSync(`${__dirname}/input.txt`, "utf-8");
 const gamesStringArray = inputFile.split("\r\n");
 
 const thresholdDict = {
@@ -11,33 +15,69 @@ const thresholdDict = {
 
 let possibleIdSum = 0;
 
-gamesStringArray.forEach((gamesString) => {
-    const [idString, playsString] = gamesString.split(":");
-    const roundsString = playsString.split(";");
+const p1 = (input) => {
+    input.forEach((gamesString) => {
+        const [idString, playsString] = gamesString.split(":");
+        const roundsString = playsString.split(";");
 
-    const id = Number(idString.trim().split(" ")[1]);
+        const id = Number(idString.trim().split(" ")[1]);
 
-    console.log({ gamesString, idString, roundsString, id });
+        const isPossible = roundsString.every((colourDrawString) => {
+            let isRoundPossible = true;
+            const drawsString = colourDrawString.split(",");
 
-    const isPossible = roundsString.every((colourDrawString) => {
-        let isRoundPossible = true;
-        const drawsString = colourDrawString.split(",");
+            drawsString.forEach((drawString) => {
+                const [countString, colour] = drawString.trim().split(" ");
 
-        drawsString.forEach((drawString) => {
-            const [countString, colour] = drawString.trim().split(" ");
+                if (Number(countString) > thresholdDict[colour]) {
+                    isRoundPossible = false;
+                }
+            });
 
-            if (Number(countString) > thresholdDict[colour]) {
-                console.log("Not Possible: ", { id, countString, colour });
-                isRoundPossible = false;
-            }
+            return isRoundPossible;
         });
 
-        return isRoundPossible;
+        if (isPossible) {
+            possibleIdSum += id;
+        }
     });
 
-    if (isPossible) {
-        possibleIdSum += id;
-    }
-});
+    return possibleIdSum
+};
 
-console.log({ possibleIdSum });
+const p2 = (input) => {
+    let totalGamePower = 0;
+
+    input.forEach((gameString) => {
+        const [idString, playsString] = gameString.split(":");
+        const roundsString = playsString.split(";");
+    
+        const minColourCount = { red: 0, green: 0, blue: 0 };
+    
+        roundsString.forEach((colourDrawString) => {
+            const drawsString = colourDrawString.split(",");
+    
+            drawsString.forEach((drawString) => {
+                const [countString, colour] = drawString.trim().split(" ");
+                const count = Number(countString);
+    
+                if (minColourCount[colour]) {
+                    if (minColourCount[colour] < count) {
+                        minColourCount[colour] = count;
+                    }
+                } else {
+                    minColourCount[colour] = count;
+                }
+            });
+        });
+    
+        const gamePower = minColourCount.red * minColourCount.green * minColourCount.blue;
+    
+        totalGamePower += gamePower;
+    });
+
+    return totalGamePower
+}
+
+console.log(`P1: ${ p1(gamesStringArray) }`);
+console.log(`P2: ${ p2(gamesStringArray) }`);

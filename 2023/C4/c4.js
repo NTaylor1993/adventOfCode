@@ -1,6 +1,10 @@
 import fs from "fs";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const inputFile = fs.readFileSync("C4/input.txt", "utf-8");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const inputFile = fs.readFileSync(`${__dirname}/input.txt`, "utf-8");
 
 const extractCardValues = (card) => {
     const [cardNoString, values] = card.split(":");
@@ -81,12 +85,10 @@ const p2 = (input) => {
             cards[index + counter].count += count;
             counter++;
         }
-
-        console.log({ winCount, count });
     });
 
     return totalCards;
 };
 
-console.log(p1(inputFile));
-console.log(p2(inputFile));
+console.log(`P1: ${p1(inputFile)}`);
+console.log(`P2: ${p2(inputFile)}`);

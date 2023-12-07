@@ -80,12 +80,17 @@ export const chunkRanges = (seedRanges) => {
     return newRanges;
 };
 
-export const processSeedsAsync = (data, startTime) => {
-    const threads = new Set();
-    let lowestLocation = Infinity;
+export const processSeedsAsync = async (data) => {
+    const p = new Promise(resolve => {workerManager(data, resolve)})
+  return await Promise.resolve(p)
+};
 
-    data.seedRanges.forEach((seedRange, index) => {
-        threads.add(new Worker("./C5/seedWorker.js", { workerData: { seedRange, data, index } }));
+const workerManager = (data, resolve) => {
+    let lowestLocation = Infinity;
+    const threads = new Set();
+
+    data.seedRanges.forEach((seedRange) => {
+        threads.add(new Worker("./2023/C5/seedWorker.js", { workerData: { seedRange, data } }));
     });
 
     for (let worker of threads) {
@@ -94,17 +99,15 @@ export const processSeedsAsync = (data, startTime) => {
         });
         worker.on("exit", () => {
             threads.delete(worker);
-            console.log(`Exiting thread, ${threads.size} remaining...`);
             if (threads.size === 0) {
-                console.log({ lowestLocation });
-                console.log(`Run Time = ${(Date.now() - startTime) / 1000} seconds`);
+                resolve(lowestLocation);
             }
         });
         worker.on("message", (msg) => {
             if (msg < lowestLocation) {
                 lowestLocation = msg;
-                console.log(`Lowest Location ${lowestLocation}`);
             }
         });
     }
-};
+
+}

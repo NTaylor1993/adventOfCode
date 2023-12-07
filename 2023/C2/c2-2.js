@@ -3,12 +3,6 @@ import fs from "fs";
 const inputFile = fs.readFileSync("C2/input.txt", "utf-8");
 const gamesStringArray = inputFile.split("\r\n");
 
-const thresholdDict = {
-    red: 12,
-    green: 13,
-    blue: 14,
-};
-
 let totalGamePower = 0;
 
 gamesStringArray.forEach((gameString) => {

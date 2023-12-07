@@ -1,3 +1,11 @@
 {
-  "editor.formatOnSave": true
+    "editor.formatOnSave": false,
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "cmd": "${workspaceFolder}/node_modules/.bin/prettier --write ${file} --config .prettierrc",
+                "match": ".(cls|cmp|eslintrc|evt|js|ts|json|html|trigger|xml)"
+            }
+        ]
+    }
 }
